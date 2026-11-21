@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14804F">
+<title>Survei Kepuasan Masyarakat – UPTD Puskesmas Tarailu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F2F7F4; --card:#FFFFFF; --ink:#16241D; --muted:#5A6A62; --line:#D5E0DA;
+  --brand:#14804F; --brand-dark:#0E6640; --brand-ink:#FFFFFF; --soft:#E3F4EA; --err:#B3261E;
+  --shadow:0 2px 6px rgba(20,60,40,.06),0 8px 24px rgba(20,60,40,.06);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:90px;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 "Nunito",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  padding:0 0 env(safe-area-inset-bottom,0)}
+
+/* Progress bar */
+.progress{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:10px 16px}
+.progress-in{max-width:680px;margin:0 auto}
+.progress-top{display:flex;justify-content:space-between;font-size:.82rem;font-weight:700;color:var(--muted);margin-bottom:6px}
+.bar{height:8px;background:var(--soft);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--brand);border-radius:99px;transition:width .3s}
+
+.wrap{max-width:680px;margin:0 auto;padding:16px 16px 64px}
+
+/* Hero */
+.hero{background:linear-gradient(135deg,var(--brand) 0%,#1FA066 100%);color:var(--brand-ink);border-radius:20px;padding:26px 22px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.1)}
+.hero .tag{display:inline-block;background:rgba(255,255,255,.2);padding:4px 12px;border-radius:99px;font-size:.8rem;font-weight:700;margin-bottom:12px}
+.hero h1{font-size:clamp(1.5rem,6vw,2rem);line-height:1.2;margin:0 0 10px;font-weight:800;letter-spacing:-.01em}
+.hero p{margin:0;opacity:.95;max-width:50ch;font-size:.95rem}
+
+/* Cards */
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;margin-top:16px;box-shadow:var(--shadow)}
+.card h2{display:flex;align-items:center;gap:12px;font-size:1.1rem;margin:0 0 18px;font-weight:800;background:var(--brand);color:var(--brand-ink);padding:10px 14px;border-radius:12px}
+.num{flex:none;display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:34px;padding:0 8px;border-radius:9px;background:#FFFFFF;color:var(--brand-dark);font-weight:800;font-size:1rem;line-height:1}
+
+label.f,.q-title{display:block;font-weight:700;margin-bottom:8px}
+.field{margin-bottom:18px}.field:last-child{margin-bottom:0}
+select,input[type=number],textarea{width:100%;font:inherit;color:var(--ink);background:#FBFDFC;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;transition:border-color .15s,box-shadow .15s}
+select:focus,input:focus,textarea:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 4px rgba(20,128,79,.15)}
+button:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+
+.opts{display:flex;flex-wrap:wrap;gap:10px}
+.opts label{display:flex;align-items:center;gap:10px;padding:11px 16px;border:1.5px solid var(--line);border-radius:12px;cursor:pointer;background:#FBFDFC;transition:all .15s}
+.opts label:hover{border-color:var(--brand)}
+.opts input{accent-color:var(--brand);width:20px;height:20px;margin:0;flex:none}
+.opts label:has(input:checked){background:var(--soft);border-color:var(--brand);font-weight:700}
+.opts.col{flex-direction:column;gap:8px}
+.opts.row2 label{flex:1;justify-content:center}
+
+/* Questions */
+.q{padding:18px 0;border-top:1px solid var(--line)}
+.q:first-of-type{border-top:0;padding-top:0}
+.q-head{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px;background:var(--brand);color:var(--brand-ink);padding:12px 14px;border-radius:12px}
+.q-head .num{margin-top:1px}
+.q-head .txt{font-weight:700;line-height:1.45}
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.scale label{position:relative;cursor:pointer}
+.scale input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.scale span{display:flex;align-items:center;justify-content:center;height:52px;border:1.5px solid var(--line);border-radius:12px;font-weight:800;font-size:1.15rem;background:#FBFDFC;transition:all .12s}
+.scale label:hover span{border-color:var(--brand)}
+.scale input:checked + span{background:var(--brand);color:var(--brand-ink);border-color:var(--brand);transform:translateY(-2px);box-shadow:0 4px 10px rgba(20,128,79,.3)}
+.scale input:focus-visible + span{outline:3px solid var(--brand);outline-offset:2px}
+.ends{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-top:7px}
+.hint{margin:0 0 6px;color:var(--muted);font-size:.9rem;background:var(--soft);padding:10px 14px;border-radius:12px}
+
+.err{color:var(--err);font-size:.86rem;font-weight:600;margin-top:6px;display:none}
+.invalid .err{display:block}
+.invalid .scale span,.invalid .opts label,.invalid select,.invalid input[type=number]{border-color:var(--err)}
+
+button.submit{width:100%;margin-top:22px;padding:16px;font:800 1.05rem "Nunito",system-ui,sans-serif;background:var(--brand);color:var(--brand-ink);border:0;border-radius:14px;cursor:pointer;box-shadow:0 6px 16px rgba(20,128,79,.3);transition:background .15s,transform .1s}
+button.submit:hover{background:var(--brand-dark)}
+button.submit:active{transform:scale(.99)}
+button.submit:disabled{opacity:.6;cursor:wait}
+.note{color:var(--muted);font-size:.85rem;margin-top:14px;text-align:center}
+
+#thanks{display:none;text-align:center;padding:48px 20px}
+.check{width:72px;height:72px;margin:0 auto 16px;border-radius:50%;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;font-size:2.2rem;font-weight:800}
+#thanks h2{justify-content:center;font-size:1.6rem;margin:0 0 8px}
+#thanks p{color:var(--muted);margin:0 auto 22px;max-width:40ch}
+#thanks button{padding:12px 24px;font:700 1rem "Nunito",system-ui,sans-serif;background:var(--soft);color:var(--ink);border:1.5px solid var(--brand);border-radius:12px;cursor:pointer}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress">
+  <div class="progress-in">
+    <div class="progress-top"><span>Kemajuan pengisian</span><span id="pct">0%</span></div>
+    <div class="bar"><i id="barfill"></i></div>
+  </div>
+</div>
+
+<div class="wrap">
+<header class="hero">
+  <span class="tag">UPTD Puskesmas Tarailu</span>
+  <h1>Survei Kepuasan Masyarakat</h1>
+  <p>Pendapat Anda sangat berharga demi pelayanan yang lebih baik di Puskesmas Tarailu. Mengisi hanya butuh sekitar 3 menit.</p>
+</header>
+
+<form id="form" novalidate>
+  <section class="card">
+    <h2><span class="num">1</span>Tentang Anda</h2>
+    <div class="field" data-req>
+      <label class="f" for="desa">Desa</label>
+      <select id="desa" name="desa" required>
+        <option value="">Pilih desa</option>
+        <option>Tarailu</option><option>Bunde</option><option>Sampaga</option>
+        <option>Tanambuah</option><option>Kalonding</option><option>Salubarana</option>
+        <option>Losso</option>
+      </select>
+      <div class="err">Pilih desa Anda.</div>
+    </div>
+    <div class="field" data-req>
+      <span class="q-title">Jenis kelamin</span>
+      <div class="opts row2">
+        <label><input type="radio" name="jenis_kelamin" value="Pria"> Pria</label>
+        <label><input type="radio" name="jenis_kelamin" value="Wanita"> Wanita</label>
+      </div>
+      <div class="err">Pilih jenis kelamin.</div>
+    </div>
+    <div class="field" data-req>
+      <label class="f" for="usia">Usia (tahun)</label>
+      <input id="usia" name="usia" type="number" inputmode="numeric" min="1" max="120" placeholder="Contoh: 35">
+      <div class="err">Isi usia antara 1 dan 120 tahun.</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2><span class="num">2</span>Layanan yang Anda terima</h2>
+    <div class="field" data-req data-group="layanan">
+      <span class="q-title">Pilih satu atau lebih</span>
+      <div class="opts col" id="layanan"></div>
+      <div class="err">Pilih minimal satu layanan.</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2><span class="num">3</span>Penilaian Anda</h2>
+    <p class="hint">Beri nilai 1 sampai 5. Angka 1 berarti sangat tidak baik, angka 5 berarti sangat baik.</p>
+    <div id="questions"></div>
+  </section>
+
+  <section class="card">
+    <h2><span class="num">4</span>Saran</h2>
+    <div class="field">
+      <label class="f" for="saran">Masukan untuk Puskesmas Tarailu (boleh dikosongkan)</label>
+      <textarea id="saran" name="saran" rows="4" maxlength="1000" placeholder="Tulis saran atau kritik Anda di sini"></textarea>
+    </div>
+  </section>
+
+  <button class="submit" type="submit" id="btn">Kirim jawaban</button>
+  <p class="note">Jawaban Anda bersifat anonim dan hanya dipakai untuk meningkatkan pelayanan.</p>
+</form>
+
+<section id="thanks" class="card">
+  <div class="check">✓</div>
+  <h2>Terima kasih</h2>
+  <p>Jawaban Anda sudah terkirim dan membantu kami memperbaiki pelayanan Puskesmas Tarailu.</p>
+  <button type="button" id="again">Isi survei lagi</button>
+</section>
+</div>
+
+<script>
+// ====== PENGATURAN ======
+// Tempel URL Web App Google Apps Script di sini. Kosong = mode uji coba (data tidak disimpan).
+var ENDPOINT = "";
+
+var LAYANAN = [
+  "Loket Pendaftaran dan Rekam Medis",
+  "Ruang Klaster 2 (Layanan Ibu dan Anak)",
+  "Ruang Klaster 3 (Layanan Usia Produktif dan Lansia)",
+  "Ruang Klaster 4 (Layanan Penanggulangan Penyakit Menular)",
+  "Ruang Gigi dan Mulut",
+  "Ruang Farmasi",
+  "Ruang Persalinan",
+  "Ruang Laboratorium",
+  "Ruang Gawat Darurat",
+  "Ruang Bermain Anak"
+];
+var PERTANYAAN = [
+  "Bagaimana pendapat Anda tentang kesesuaian persyaratan pelayanan dengan jenis pelayanannya?",
+  "Bagaimana pemahaman Anda tentang kemudahan prosedur pelayanan di unit ini?",
+  "Bagaimana pendapat Anda tentang kecepatan waktu dalam memberikan pelayanan?",
+  "Bagaimana pendapat Anda tentang kewajaran biaya/tarif dalam pelayanan?",
+  "Bagaimana pendapat Anda tentang kesesuaian produk pelayanan antara yang tercantum dalam standar pelayanan dengan hasil yang diberikan?",
+  "Bagaimana pendapat Anda tentang kompetensi/kemampuan petugas dalam memberikan pelayanan?",
+  "Bagaimana pendapat Anda tentang perilaku petugas dalam pelayanan terkait kesopanan dan keramahan?",
+  "Bagaimana pendapat Anda tentang kualitas sarana dan prasarana?",
+  "Bagaimana pendapat Anda tentang penanganan pengaduan pengguna layanan?"
+];
+
+var $ = function(s){ return document.querySelector(s); };
+var form = $("#form");
+
+$("#layanan").innerHTML = LAYANAN.map(function(l){
+  return '<label><input type="checkbox" name="layanan" value="'+l+'"> '+l+'</label>';
+}).join("");
+
+$("#questions").innerHTML = PERTANYAAN.map(function(t,i){
+  var n = i+1, r = "";
+  for (var v=1; v<=5; v++) r += '<label><input type="radio" name="q'+n+'" value="'+v+'" aria-label="Nilai '+v+'"><span>'+v+'</span></label>';
+  return '<div class="q field" data-req>'+
+           '<div class="q-head"><span class="num">'+n+'</span><span class="txt">'+t+'</span></div>'+
+           '<div class="scale">'+r+'</div>'+
+           '<div class="ends"><span>Sangat tidak baik</span><span>Sangat baik</span></div>'+
+           '<div class="err">Pilih nilai 1 sampai 5.</div></div>';
+}).join("");
+
+function filled(block){
+  var sel = block.querySelector("select"), num = block.querySelector("input[type=number]");
+  if (sel) return !!sel.value;
+  if (num) return num.value !== "" && +num.value >= 1 && +num.value <= 120;
+  return !!block.querySelector("input:checked");
+}
+function valid(block){
+  var ok = filled(block);
+  block.classList.toggle("invalid", !ok);
+  return ok;
+}
+function updateProgress(){
+  var blocks = form.querySelectorAll("[data-req]"), done = 0;
+  blocks.forEach(function(b){ if (filled(b)) done++; });
+  var p = Math.round(done / blocks.length * 100);
+  $("#barfill").style.width = p + "%";
+  $("#pct").textContent = p + "%";
+}
+
+form.addEventListener("input", function(e){
+  var b = e.target.closest("[data-req]"); if (b && b.classList.contains("invalid")) valid(b);
+  updateProgress();
+});
+
+form.addEventListener("submit", function(e){
+  e.preventDefault();
+  var first = null;
+  form.querySelectorAll("[data-req]").forEach(function(b){ if (!valid(b) && !first) first = b; });
+  if (first){ first.scrollIntoView({behavior:"smooth",block:"center"}); return; }
+
+  var d = {
+    waktu: new Date().toISOString(),
+    desa: form.desa.value,
+    jenis_kelamin: form.querySelector("input[name=jenis_kelamin]:checked").value,
+    usia: form.usia.value,
+    layanan: Array.prototype.map.call(form.querySelectorAll("input[name=layanan]:checked"), function(c){return c.value;}).join("; "),
+    saran: form.saran.value.trim()
+  };
+  for (var i=1; i<=PERTANYAAN.length; i++) d["q"+i] = form.querySelector("input[name=q"+i+"]:checked").value;
+
+  var btn = $("#btn"); btn.disabled = true; btn.textContent = "Mengirim…";
+  var done = function(){ form.style.display="none"; $("#progress").style.display="none"; $("#thanks").style.display="block"; window.scrollTo({top:0}); };
+  var fail = function(){ btn.disabled=false; btn.textContent="Kirim jawaban"; alert("Jawaban belum terkirim. Periksa koneksi internet Anda lalu coba lagi."); };
+
+  if (!ENDPOINT){ console.log("Mode uji coba, data tidak disimpan:", d); setTimeout(done, 400); return; }
+  fetch(ENDPOINT, {method:"POST", mode:"no-cors", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(d)})
+    .then(done).catch(fail);
+});
+
+$("#again").addEventListener("click", function(){
+  form.reset(); form.querySelectorAll(".invalid").forEach(function(b){b.classList.remove("invalid");});
+  $("#btn").disabled=false; $("#btn").textContent="Kirim jawaban";
+  $("#thanks").style.display="none"; $("#progress").style.display="block"; form.style.display="block";
+  updateProgress(); window.scrollTo({top:0});
+});
+</script>
+</body>
+</html>
