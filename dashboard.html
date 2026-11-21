@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14804F">
+<meta name="robots" content="noindex,nofollow">
+<title>Dasbor Survei – UPTD Puskesmas Tarailu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F2F7F4; --card:#FFFFFF; --ink:#16241D; --muted:#5A6A62; --line:#D5E0DA;
+  --brand:#14804F; --brand-dark:#0E6640; --soft:#E3F4EA; --amber:#E0A100; --red:#C73A2E;
+  --shadow:0 2px 6px rgba(20,60,40,.06),0 8px 24px rgba(20,60,40,.06);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 "Nunito",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:980px;margin:0 auto;padding:16px 16px 56px}
+.hero{background:linear-gradient(135deg,var(--brand),#1FA066);color:#fff;border-radius:20px;padding:22px;box-shadow:var(--shadow);display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.hero .tag{display:inline-block;background:rgba(255,255,255,.2);padding:3px 12px;border-radius:99px;font-size:.8rem;font-weight:700;margin-bottom:8px}
+.hero h1{margin:0;font-size:clamp(1.35rem,5vw,1.8rem);line-height:1.2;font-weight:800}
+.hero small{opacity:.9}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+button,.btn{font:700 .92rem "Nunito",system-ui,sans-serif;border-radius:10px;padding:10px 14px;cursor:pointer;border:1.5px solid rgba(255,255,255,.7);background:rgba(255,255,255,.15);color:#fff}
+button:hover{background:rgba(255,255,255,.28)}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+
+.filters{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.filters label{font-size:.8rem;font-weight:700;color:var(--muted);display:block;margin-bottom:4px}
+select,input[type=password]{width:100%;font:inherit;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px}
+
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:14px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow)}
+.kpi .l{font-size:.82rem;font-weight:700;color:var(--muted)}
+.kpi .v{font-size:2rem;font-weight:800;line-height:1.15;margin-top:4px;color:var(--brand-dark)}
+.kpi .s{font-size:.85rem;color:var(--muted);margin-top:2px}
+.badge{display:inline-block;padding:2px 10px;border-radius:99px;font-size:.8rem;font-weight:800;color:#fff;background:var(--brand)}
+.badge.b{background:#4C9A2A}.badge.c{background:var(--amber)}.badge.d{background:var(--red)}
+
+.grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow)}
+.card h2{display:flex;align-items:center;gap:10px;margin:0 0 14px;font-size:1rem;font-weight:800;background:var(--brand);color:#fff;padding:9px 12px;border-radius:12px}
+.num{flex:none;display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;padding:0 6px;border-radius:8px;background:#fff;color:var(--brand-dark);font-weight:800;font-size:.9rem;line-height:1}
+
+.row{display:grid;grid-template-columns:minmax(110px,38%) 1fr auto;gap:10px;align-items:center;margin:9px 0;font-size:.92rem}
+.row .nm{display:flex;gap:8px;align-items:center;font-weight:600;line-height:1.25}
+.row .nm .num{min-width:24px;height:24px;font-size:.8rem;background:var(--brand);color:#fff}
+.track{height:14px;background:var(--soft);border-radius:99px;overflow:hidden}
+.track i{display:block;height:100%;border-radius:99px;background:var(--brand);transition:width .4s}
+.track i.mid{background:var(--amber)}.track i.low{background:var(--red)}
+.row .val{font-weight:800;min-width:42px;text-align:right}
+
+.stack{display:flex;height:30px;border-radius:10px;overflow:hidden;background:var(--soft)}
+.stack div{display:flex;align-items:center;justify-content:center;color:#fff;font-size:.78rem;font-weight:800;min-width:0}
+.legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:10px;font-size:.82rem;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;background:var(--c);vertical-align:-1px}
+
+.trend{display:flex;align-items:flex-end;gap:6px;height:140px;padding-top:8px}
+.trend .col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
+.trend .col i{display:block;width:100%;max-width:34px;background:var(--brand);border-radius:6px 6px 0 0;min-height:3px}
+.trend .col b{font-size:.72rem;margin-bottom:3px}
+.trend .col span{font-size:.66rem;color:var(--muted);margin-top:4px;white-space:nowrap}
+
+.saran{list-style:none;margin:0;padding:0;max-height:380px;overflow:auto}
+.saran li{padding:12px 0;border-top:1px solid var(--line)}
+.saran li:first-child{border-top:0;padding-top:0}
+.saran .meta{font-size:.78rem;color:var(--muted);margin-top:3px}
+.empty{color:var(--muted);font-size:.92rem;padding:6px 0}
+
+#gate{max-width:420px;margin:12vh auto 0;text-align:center}
+#gate .card{padding:26px}
+#gate h2{justify-content:center}
+#gate p{color:var(--muted);margin:0 0 14px}
+#gate button{width:100%;margin-top:12px;background:var(--brand);color:#fff;border:0;padding:13px;font-size:1rem}
+#gate button:hover{background:var(--brand-dark)}
+.msg{color:var(--red);font-weight:700;font-size:.88rem;margin-top:10px;min-height:1.2em}
+#app{display:none}
+.foot{text-align:center;color:var(--muted);font-size:.8rem;margin-top:18px}
+
+@media (min-width:720px){
+  .kpis{grid-template-columns:repeat(4,1fr)}
+  .filters{grid-template-columns:1fr 1fr 1fr}
+  .grid.two{grid-template-columns:1fr 1fr}
+  .span2{grid-column:1/-1}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- Layar PIN -->
+<div id="gate">
+  <div class="card">
+    <h2><span class="num">🔒</span>Dasbor Survei Tarailu</h2>
+    <p>Masukkan kunci akses untuk melihat hasil survei.</p>
+    <input type="password" id="pin" placeholder="Kunci akses" autocomplete="current-password" aria-label="Kunci akses">
+    <button type="button" id="masuk">Masuk</button>
+    <div class="msg" id="gmsg" role="alert"></div>
+  </div>
+</div>
+
+<!-- Dasbor -->
+<div id="app">
+  <header class="hero">
+    <div>
+      <span class="tag">UPTD Puskesmas Tarailu</span>
+      <h1>Dasbor Hasil Survei Kepuasan Masyarakat</h1>
+      <small id="upd">Memuat data…</small>
+    </div>
+    <div class="btns">
+      <button type="button" id="refresh">↻ Muat ulang</button>
+      <button type="button" id="csv">⬇ Unduh CSV</button>
+      <button type="button" id="keluar">Keluar</button>
+    </div>
+  </header>
+
+  <div class="filters">
+    <div><label for="fDesa">Desa</label><select id="fDesa"></select></div>
+    <div><label for="fLay">Layanan</label><select id="fLay"></select></div>
+    <div><label for="fJk">Jenis kelamin</label><select id="fJk"><option value="">Semua</option><option>Pria</option><option>Wanita</option></select></div>
+  </div>
+
+  <section class="kpis" id="kpis"></section>
+
+  <div class="grid">
+    <section class="card">
+      <h2><span class="num">1</span>Nilai rata-rata tiap unsur pelayanan <small style="font-weight:600;opacity:.9">(skala 1–5)</small></h2>
+      <div id="unsur"></div>
+    </section>
+
+    <div class="grid two" style="margin-top:0">
+      <section class="card">
+        <h2><span class="num">2</span>Sebaran nilai yang diberikan</h2>
+        <div id="dist"></div>
+      </section>
+      <section class="card">
+        <h2><span class="num">3</span>Jumlah responden 14 hari terakhir</h2>
+        <div id="trend"></div>
+      </section>
+    </div>
+
+    <div class="grid two" style="margin-top:0">
+      <section class="card">
+        <h2><span class="num">4</span>Responden per desa</h2>
+        <div id="desa"></div>
+      </section>
+      <section class="card">
+        <h2><span class="num">5</span>Layanan yang digunakan</h2>
+        <div id="lay"></div>
+      </section>
+    </div>
+
+    <div class="grid two" style="margin-top:0">
+      <section class="card">
+        <h2><span class="num">6</span>Jenis kelamin</h2>
+        <div id="jk"></div>
+      </section>
+      <section class="card">
+        <h2><span class="num">7</span>Kelompok usia</h2>
+        <div id="usia"></div>
+      </section>
+    </div>
+
+    <section class="card">
+      <h2><span class="num">8</span>Saran dari masyarakat</h2>
+      <ul class="saran" id="saran"></ul>
+    </section>
+  </div>
+  <p class="foot">Indeks = rata-rata nilai × 20 (skala 20–100). Data diambil langsung dari Google Sheets.</p>
+</div>
+
+</div>
+
+<script>
+// ====== PENGATURAN ======
+var ENDPOINT = "https://script.google.com/macros/s/AKfycbzoToIOkwkL4qxdkRO8eOHZlbX80MkNc2202hy3TVoSCcySpTGiniKUU6D0o7k3BYm_Gg/exec";
+
+var UNSUR = ["Persyaratan pelayanan","Prosedur pelayanan","Kecepatan waktu pelayanan","Kewajaran biaya/tarif","Kesesuaian produk pelayanan","Kompetensi petugas","Perilaku petugas","Sarana dan prasarana","Penanganan pengaduan"];
+var WARNA = ["#C73A2E","#E8833A","#E0A100","#4C9A2A","#14804F"];
+
+var $ = function(s){ return document.querySelector(s); };
+var DATA = [], KUNCI = "";
+
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+function store(k,v){ try{ if(v===null) sessionStorage.removeItem(k); else sessionStorage.setItem(k,v); }catch(e){} }
+function read(k){ try{ return sessionStorage.getItem(k)||""; }catch(e){ return ""; } }
+function avg(a){ return a.length ? a.reduce(function(x,y){return x+y;},0)/a.length : 0; }
+function f1(n){ return (Math.round(n*10)/10).toFixed(1).replace(".",","); }
+function f2(n){ return (Math.round(n*100)/100).toFixed(2).replace(".",","); }
+function tgl(iso,opt){ var d=new Date(iso); if(isNaN(d)) return ""; return d.toLocaleDateString("id-ID",opt||{day:"numeric",month:"short",year:"numeric",timeZone:"Asia/Jakarta"}); }
+function hariKey(iso){ var d=new Date(iso); if(isNaN(d)) return ""; return d.toLocaleDateString("en-CA",{timeZone:"Asia/Jakarta"}); }
+
+function mutu(i){
+  if (i>=88.31) return ["Sangat baik",""];
+  if (i>=76.61) return ["Baik","b"];
+  if (i>=65)    return ["Kurang baik","c"];
+  return ["Tidak baik","d"];
+}
+function warnaBar(v){ return v>=4 ? "" : v>=3 ? "mid" : "low"; }
+
+function bars(items, max, withNum){
+  if (!items.length) return '<div class="empty">Belum ada data.</div>';
+  return items.map(function(it,i){
+    var w = max ? Math.max(2, it.v/max*100) : 0;
+    return '<div class="row"><div class="nm">'+(withNum?'<span class="num">'+(i+1)+'</span>':'')+'<span>'+esc(it.l)+'</span></div>'+
+      '<div class="track"><i class="'+(it.c||"")+'" style="width:'+w+'%"></i></div><div class="val">'+esc(it.t!=null?it.t:it.v)+'</div></div>';
+  }).join("");
+}
+function hitung(arr, key){
+  var m = {}; arr.forEach(function(r){ var k = r[key]; if (k!=="" && k!=null) m[k]=(m[k]||0)+1; });
+  return Object.keys(m).map(function(k){ return {l:k, v:m[k]}; }).sort(function(a,b){return b.v-a.v;});
+}
+function nilai(r,i){ var n = +r["q"+i]; return n>=1 && n<=5 ? n : null; }
+
+function filtered(){
+  var d=$("#fDesa").value, l=$("#fLay").value, j=$("#fJk").value;
+  return DATA.filter(function(r){
+    if (d && r.desa!==d) return false;
+    if (j && r.jenis_kelamin!==j) return false;
+    if (l && String(r.layanan||"").split("; ").indexOf(l)<0) return false;
+    return true;
+  });
+}
+
+function opsi(sel, label, list){
+  var cur = sel.value;
+  sel.innerHTML = '<option value="">'+label+'</option>' + list.map(function(x){return '<option>'+esc(x)+'</option>';}).join("");
+  if (list.indexOf(cur)>=0) sel.value = cur;
+}
+
+function render(){
+  var rows = filtered(), n = rows.length;
+
+  // Skor
+  var all = [], per = UNSUR.map(function(){return [];});
+  rows.forEach(function(r){ UNSUR.forEach(function(_,i){ var v=nilai(r,i+1); if(v!==null){ per[i].push(v); all.push(v); } }); });
+  var rata = avg(all), indeks = rata*20, puas = all.length ? all.filter(function(v){return v>=4;}).length/all.length*100 : 0;
+  var m = mutu(indeks);
+
+  $("#kpis").innerHTML =
+    '<div class="kpi"><div class="l">Jumlah responden</div><div class="v">'+n+'</div><div class="s">orang mengisi survei</div></div>'+
+    '<div class="kpi"><div class="l">Indeks kepuasan</div><div class="v">'+(n?f2(indeks):"–")+'</div><div class="s">'+(n?'<span class="badge '+m[1]+'">'+m[0]+'</span>':'skala 20–100')+'</div></div>'+
+    '<div class="kpi"><div class="l">Rata-rata nilai</div><div class="v">'+(n?f2(rata):"–")+'</div><div class="s">dari skala 1–5</div></div>'+
+    '<div class="kpi"><div class="l">Responden puas</div><div class="v">'+(n?Math.round(puas)+"%":"–")+'</div><div class="s">memberi nilai 4 atau 5</div></div>';
+
+  // Unsur
+  $("#unsur").innerHTML = bars(UNSUR.map(function(u,i){
+    var a = avg(per[i]); return {l:u, v:a, t:per[i].length?f2(a):"–", c:warnaBar(a)};
+  }), 5, true);
+
+  // Sebaran nilai
+  if (!all.length){ $("#dist").innerHTML='<div class="empty">Belum ada data.</div>'; }
+  else {
+    var cnt=[0,0,0,0,0]; all.forEach(function(v){cnt[v-1]++;});
+    $("#dist").innerHTML = '<div class="stack" role="img" aria-label="Sebaran nilai 1 sampai 5">'+
+      cnt.map(function(c,i){ var p=c/all.length*100; return p>0?'<div style="width:'+p+'%;background:'+WARNA[i]+'">'+(p>=8?Math.round(p)+"%":"")+'</div>':""; }).join("")+'</div>'+
+      '<div class="legend">'+cnt.map(function(c,i){return '<span style="--c:'+WARNA[i]+'">Nilai '+(i+1)+': '+c+'</span>';}).join("")+'</div>';
+  }
+
+  // Tren 14 hari
+  var hari = [], now = new Date();
+  for (var k=13;k>=0;k--){ var d=new Date(now.getTime()-k*86400000); hari.push({key:hariKey(d.toISOString()), lab:tgl(d.toISOString(),{day:"numeric",month:"short",timeZone:"Asia/Jakarta"}), v:0}); }
+  rows.forEach(function(r){ var key=hariKey(r.waktu); hari.forEach(function(h){ if(h.key===key) h.v++; }); });
+  var mx = Math.max.apply(null,hari.map(function(h){return h.v;}))||1;
+  $("#trend").innerHTML = '<div class="trend">'+hari.map(function(h,i){
+    return '<div class="col"><b>'+(h.v||"")+'</b><i style="height:'+(h.v/mx*100)+'%"></i><span>'+(i%2===0?h.lab:"&nbsp;")+'</span></div>';
+  }).join("")+'</div>';
+
+  // Desa, layanan, JK, usia
+  var d1 = hitung(rows,"desa");
+  $("#desa").innerHTML = bars(d1.map(function(x){return {l:x.l,v:x.v};}), d1.length?d1[0].v:0);
+  var lc = {}; rows.forEach(function(r){ String(r.layanan||"").split("; ").forEach(function(s){ if(s) lc[s]=(lc[s]||0)+1; }); });
+  var l1 = Object.keys(lc).map(function(k){return {l:k,v:lc[k]};}).sort(function(a,b){return b.v-a.v;});
+  $("#lay").innerHTML = bars(l1, l1.length?l1[0].v:0);
+  var j1 = hitung(rows,"jenis_kelamin");
+  $("#jk").innerHTML = bars(j1.map(function(x){return {l:x.l,v:x.v,t:x.v+" ("+Math.round(x.v/n*100)+"%)"};}), j1.length?j1[0].v:0);
+  var g = [["Di bawah 18",0,17],["18–30",18,30],["31–45",31,45],["46–60",46,60],["Di atas 60",61,200]].map(function(x){
+    return {l:x[0], v:rows.filter(function(r){var u=+r.usia; return u>=x[1]&&u<=x[2];}).length};
+  });
+  var gm = Math.max.apply(null,g.map(function(x){return x.v;}))||0;
+  $("#usia").innerHTML = n ? bars(g,gm) : '<div class="empty">Belum ada data.</div>';
+
+  // Saran
+  var sr = rows.filter(function(r){return String(r.saran||"").trim();}).sort(function(a,b){return new Date(b.waktu)-new Date(a.waktu);}).slice(0,30);
+  $("#saran").innerHTML = sr.length ? sr.map(function(r){
+    return '<li><div>'+esc(r.saran)+'</div><div class="meta">'+esc(r.desa)+' · '+esc(r.jenis_kelamin)+', '+esc(r.usia)+' th · '+esc(tgl(r.waktu))+'</div></li>';
+  }).join("") : '<li class="empty">Belum ada saran.</li>';
+}
+
+function muat(){
+  $("#upd").textContent = "Memuat data…";
+  return fetch(ENDPOINT+"?kunci="+encodeURIComponent(KUNCI)).then(function(r){return r.json();}).then(function(j){
+    if (j.error) throw new Error(j.error);
+    DATA = j.rows||[];
+    opsi($("#fDesa"),"Semua desa", Array.from(new Set(DATA.map(function(r){return r.desa;}).filter(Boolean))).sort());
+    var ls = {}; DATA.forEach(function(r){ String(r.layanan||"").split("; ").forEach(function(s){ if(s) ls[s]=1; }); });
+    opsi($("#fLay"),"Semua layanan", Object.keys(ls).sort());
+    $("#upd").textContent = "Diperbarui "+new Date().toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit",timeZone:"Asia/Jakarta"})+" WIB · "+DATA.length+" jawaban";
+    render();
+  });
+}
+
+function masuk(){
+  KUNCI = $("#pin").value.trim() || read("kunci");
+  if (!KUNCI){ $("#gmsg").textContent="Isi kunci akses."; return; }
+  $("#gmsg").textContent="Memeriksa…";
+  muat().then(function(){
+    store("kunci",KUNCI); $("#gate").style.display="none"; $("#app").style.display="block"; $("#gmsg").textContent="";
+  }).catch(function(e){
+    store("kunci",null); $("#gmsg").textContent = /kunci/i.test(e.message) ? "Kunci akses salah." : "Gagal memuat data. Periksa koneksi lalu coba lagi.";
+  });
+}
+
+$("#masuk").addEventListener("click",masuk);
+$("#pin").addEventListener("keydown",function(e){ if(e.key==="Enter") masuk(); });
+$("#refresh").addEventListener("click",function(){ muat().catch(function(){ $("#upd").textContent="Gagal memuat. Coba lagi."; }); });
+$("#keluar").addEventListener("click",function(){ store("kunci",null); location.reload(); });
+["#fDesa","#fLay","#fJk"].forEach(function(s){ $(s).addEventListener("change",render); });
+
+$("#csv").addEventListener("click",function(){
+  var rows = filtered(); if(!rows.length) return;
+  var cols = ["waktu","desa","jenis_kelamin","usia","layanan"].concat(UNSUR.map(function(_,i){return "q"+(i+1);}),["saran"]);
+  var q = function(v){ return '"'+String(v==null?"":v).replace(/"/g,'""')+'"'; };
+  var csv = "\ufeff"+cols.join(",")+"\n"+rows.map(function(r){return cols.map(function(c){return q(r[c]);}).join(",");}).join("\n");
+  var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+  a.download = "hasil-survei-tarailu.csv"; document.body.appendChild(a); a.click(); a.remove();
+});
+
+if (read("kunci")) masuk();
+</script>
+</body>
+</html>
