@@ -76,6 +76,18 @@ select,input[type=password]{width:100%;font:inherit;color:var(--ink);background:
 #gate p{color:var(--muted);margin:0 0 14px}
 #gate button{width:100%;margin-top:12px;background:var(--brand);color:#fff;border:0;padding:13px;font-size:1rem}
 #gate button:hover{background:var(--brand-dark)}
+.pw{position:relative}
+.pw input{padding-right:52px}
+#pin{height:54px;line-height:1.2;font-family:ui-monospace,"Cascadia Mono",Consolas,Menlo,"Courier New",monospace;font-size:1.15rem;letter-spacing:.08em;font-weight:700}
+#pin::placeholder{font-family:"Nunito",system-ui,sans-serif;font-size:1rem;letter-spacing:normal;font-weight:400}
+.pie-wrap{display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:center}
+.pie{width:172px;height:172px;border-radius:50%;flex:none;box-shadow:0 0 0 4px #fff,0 0 0 5px var(--line)}
+.plegend{list-style:none;margin:0;padding:0;flex:1;min-width:160px}
+.plegend li{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:.92rem}
+.plegend i{width:13px;height:13px;border-radius:4px;background:var(--c);flex:none}
+.plegend b{margin-left:auto;font-weight:800;white-space:nowrap;padding-left:8px}
+#gate .pw button{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:40px;height:40px;margin:0;padding:0;background:transparent;color:var(--muted);border:0;border-radius:8px;display:flex;align-items:center;justify-content:center}
+#gate .pw button:hover{background:var(--soft);color:var(--brand-dark)}
 .msg{color:var(--red);font-weight:700;font-size:.88rem;margin-top:10px;min-height:1.2em}
 #app{display:none}
 .foot{text-align:center;color:var(--muted);font-size:.8rem;margin-top:18px}
@@ -97,7 +109,13 @@ select,input[type=password]{width:100%;font:inherit;color:var(--ink);background:
   <div class="card">
     <h2><span class="num">🔒</span>Dasbor Survei Tarailu</h2>
     <p>Masukkan kunci akses untuk melihat hasil survei.</p>
-    <input type="password" id="pin" placeholder="Kunci akses" autocomplete="current-password" aria-label="Kunci akses">
+    <div class="pw">
+      <input type="password" id="pin" placeholder="Kunci akses" autocomplete="current-password" aria-label="Kunci akses">
+      <button type="button" id="mata" aria-label="Tampilkan kunci" aria-pressed="false">
+        <svg id="ico-on" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        <svg id="ico-off" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:none"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20C5 20 1 12 1 12a18.5 18.5 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19M14.12 14.12a3 3 0 1 1-4.24-4.24"/><path d="M1 1l22 22"/></svg>
+      </button>
+    </div>
     <button type="button" id="masuk">Masuk</button>
     <div class="msg" id="gmsg" role="alert"></div>
   </div>
@@ -210,6 +228,20 @@ function bars(items, max, withNum){
       '<div class="track"><i class="'+(it.c||"")+'" style="width:'+w+'%"></i></div><div class="val">'+esc(it.t!=null?it.t:it.v)+'</div></div>';
   }).join("");
 }
+var PIE = ["#14804F","#2F6FDE","#E0A100","#C73A2E","#8A4FD1","#17A2B8","#E8833A","#6B7A72"];
+function pie(items){
+  var total = items.reduce(function(s,x){return s+x.v;},0);
+  if (!total) return '<div class="empty">Belum ada data.</div>';
+  var acc = 0, stops = [];
+  items.forEach(function(x,i){
+    var a = acc/total*100; acc += x.v; var b = acc/total*100;
+    stops.push(PIE[i%PIE.length]+" "+a+"% "+b+"%");
+  });
+  return '<div class="pie-wrap"><div class="pie" role="img" aria-label="Diagram lingkaran" style="background:conic-gradient('+stops.join(",")+')"></div>'+
+    '<ul class="plegend">'+items.map(function(x,i){
+      return '<li style="--c:'+PIE[i%PIE.length]+'"><i></i><span>'+esc(x.l)+'</span><b>'+x.v+' ('+f1(x.v/total*100)+'%)</b></li>';
+    }).join("")+'</ul></div>';
+}
 function hitung(arr, key){
   var m = {}; arr.forEach(function(r){ var k = r[key]; if (k!=="" && k!=null) m[k]=(m[k]||0)+1; });
   return Object.keys(m).map(function(k){ return {l:k, v:m[k]}; }).sort(function(a,b){return b.v-a.v;});
@@ -272,12 +304,12 @@ function render(){
 
   // Desa, layanan, JK, usia
   var d1 = hitung(rows,"desa");
-  $("#desa").innerHTML = bars(d1.map(function(x){return {l:x.l,v:x.v};}), d1.length?d1[0].v:0);
+  $("#desa").innerHTML = pie(d1);
   var lc = {}; rows.forEach(function(r){ String(r.layanan||"").split("; ").forEach(function(s){ if(s) lc[s]=(lc[s]||0)+1; }); });
   var l1 = Object.keys(lc).map(function(k){return {l:k,v:lc[k]};}).sort(function(a,b){return b.v-a.v;});
   $("#lay").innerHTML = bars(l1, l1.length?l1[0].v:0);
   var j1 = hitung(rows,"jenis_kelamin");
-  $("#jk").innerHTML = bars(j1.map(function(x){return {l:x.l,v:x.v,t:x.v+" ("+Math.round(x.v/n*100)+"%)"};}), j1.length?j1[0].v:0);
+  $("#jk").innerHTML = pie(j1);
   var g = [["Di bawah 18",0,17],["18–30",18,30],["31–45",31,45],["46–60",46,60],["Di atas 60",61,200]].map(function(x){
     return {l:x[0], v:rows.filter(function(r){var u=+r.usia; return u>=x[1]&&u<=x[2];}).length};
   });
@@ -315,6 +347,14 @@ function masuk(){
   });
 }
 
+$("#mata").addEventListener("click",function(){
+  var tampil = $("#pin").type === "password";
+  $("#pin").type = tampil ? "text" : "password";
+  $("#ico-on").style.display = tampil ? "none" : "";
+  $("#ico-off").style.display = tampil ? "" : "none";
+  this.setAttribute("aria-pressed", tampil ? "true" : "false");
+  this.setAttribute("aria-label", tampil ? "Sembunyikan kunci" : "Tampilkan kunci");
+});
 $("#masuk").addEventListener("click",masuk);
 $("#pin").addEventListener("keydown",function(e){ if(e.key==="Enter") masuk(); });
 $("#refresh").addEventListener("click",function(){ muat().catch(function(){ $("#upd").textContent="Gagal memuat. Coba lagi."; }); });
