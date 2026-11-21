@@ -107,7 +107,7 @@ button.submit:disabled{opacity:.6;cursor:wait}
 
 <form id="form" novalidate>
   <section class="card">
-    <h2><span class="num">1</span>Tentang Anda</h2>
+    <h2><span class="num" aria-hidden="true">👤</span>Tentang Anda</h2>
     <div class="field" data-req>
       <label class="f" for="desa">Desa</label>
       <select id="desa" name="desa" required>
@@ -134,7 +134,7 @@ button.submit:disabled{opacity:.6;cursor:wait}
   </section>
 
   <section class="card">
-    <h2><span class="num">2</span>Layanan yang Anda terima</h2>
+    <h2><span class="num" aria-hidden="true">🏥</span>Layanan yang Anda terima</h2>
     <div class="field" data-req data-group="layanan">
       <span class="q-title">Pilih satu atau lebih</span>
       <div class="opts col" id="layanan"></div>
@@ -143,13 +143,13 @@ button.submit:disabled{opacity:.6;cursor:wait}
   </section>
 
   <section class="card">
-    <h2><span class="num">3</span>Penilaian Anda</h2>
+    <h2><span class="num" aria-hidden="true">⭐</span>Penilaian Anda</h2>
     <p class="hint">Beri nilai 1 sampai 5. Angka 1 berarti sangat tidak baik, angka 5 berarti sangat baik.</p>
     <div id="questions"></div>
   </section>
 
   <section class="card">
-    <h2><span class="num">4</span>Saran</h2>
+    <h2><span class="num" aria-hidden="true">💬</span>Saran</h2>
     <div class="field">
       <label class="f" for="saran">Masukan untuk Puskesmas Tarailu (boleh dikosongkan)</label>
       <textarea id="saran" name="saran" rows="4" maxlength="1000" placeholder="Tulis saran atau kritik Anda di sini"></textarea>
