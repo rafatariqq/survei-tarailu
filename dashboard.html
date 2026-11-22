@@ -196,6 +196,7 @@ select,input[type=password]{width:100%;font:inherit;color:var(--ink);background:
 <script>
 // ====== PENGATURAN ======
 var ENDPOINT = "https://script.google.com/macros/s/AKfycbzoToIOkwkL4qxdkRO8eOHZlbX80MkNc2202hy3TVoSCcySpTGiniKUU6D0o7k3BYm_Gg/exec";
+var HAPUS_LAYANAN = ["ruang bermain anak", "ruang beriman anak"];
 
 var UNSUR = ["Persyaratan pelayanan","Prosedur pelayanan","Kecepatan waktu pelayanan","Kewajaran biaya/tarif","Kesesuaian produk pelayanan","Kompetensi petugas","Perilaku petugas","Sarana dan prasarana","Penanganan pengaduan"];
 var WARNA = ["#C73A2E","#E8833A","#E0A100","#4C9A2A","#14804F"];
@@ -203,6 +204,7 @@ var WARNA = ["#C73A2E","#E8833A","#E0A100","#4C9A2A","#14804F"];
 var $ = function(s){ return document.querySelector(s); };
 var DATA = [], KUNCI = "";
 
+function isDihapus(nama){ return HAPUS_LAYANAN.indexOf(String(nama||"").trim().toLowerCase()) >= 0; }
 function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
 function store(k,v){ try{ if(v===null) sessionStorage.removeItem(k); else sessionStorage.setItem(k,v); }catch(e){} }
 function read(k){ try{ return sessionStorage.getItem(k)||""; }catch(e){ return ""; } }
@@ -305,7 +307,7 @@ function render(){
   // Desa, layanan, JK, usia
   var d1 = hitung(rows,"desa");
   $("#desa").innerHTML = pie(d1);
-  var lc = {}; rows.forEach(function(r){ String(r.layanan||"").split("; ").forEach(function(s){ if(s) lc[s]=(lc[s]||0)+1; }); });
+  var lc = {}; rows.forEach(function(r){ String(r.layanan||"").split("; ").forEach(function(s){ if(s && !isDihapus(s)) lc[s]=(lc[s]||0)+1; }); });
   var l1 = Object.keys(lc).map(function(k){return {l:k,v:lc[k]};}).sort(function(a,b){return b.v-a.v;});
   $("#lay").innerHTML = bars(l1, l1.length?l1[0].v:0);
   var j1 = hitung(rows,"jenis_kelamin");
@@ -329,7 +331,7 @@ function muat(){
     if (j.error) throw new Error(j.error);
     DATA = j.rows||[];
     opsi($("#fDesa"),"Semua desa", Array.from(new Set(DATA.map(function(r){return r.desa;}).filter(Boolean))).sort());
-    var ls = {}; DATA.forEach(function(r){ String(r.layanan||"").split("; ").forEach(function(s){ if(s) ls[s]=1; }); });
+    var ls = {}; DATA.forEach(function(r){ String(r.layanan||"").split("; ").forEach(function(s){ if(s && !isDihapus(s)) ls[s]=1; }); });
     opsi($("#fLay"),"Semua layanan", Object.keys(ls).sort());
     $("#upd").textContent = "Diperbarui "+new Date().toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit",timeZone:"Asia/Jakarta"})+" WIB · "+DATA.length+" jawaban";
     render();
